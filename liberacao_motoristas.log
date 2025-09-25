@@ -1,0 +1,117 @@
+2025-09-25 12:35:43,295 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:35:43.295971 ====================
+2025-09-25 12:35:43,295 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 12:35:43,593 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 12:35:43,595 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:35:43.595190 ====================
+2025-09-25 12:36:18,289 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 12:36:19,028 — INFO — Página carregada (readyState complete).
+2025-09-25 12:36:19,444 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 12:36:49,934 — WARNING — Botão 'Create a Copy' não encontrado, tentando próximo...
+2025-09-25 12:37:05,295 — INFO — Execução finalizada manualmente pelo usuário.
+2025-09-25 12:37:32,061 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:37:32.061882 ====================
+2025-09-25 12:37:32,061 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 12:37:32,334 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 12:37:32,335 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:37:32.335043 ====================
+2025-09-25 12:38:05,635 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 12:38:06,315 — INFO — Página carregada (readyState complete).
+2025-09-25 12:38:06,817 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 12:38:22,273 — INFO — Execução finalizada manualmente pelo usuário.
+2025-09-25 12:38:22,276 — WARNING — Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'Foi forçado o cancelamento de uma conexão existente pelo host remoto', None, 10054, None)': /session/ff47bf72c985c3f03705828ee52e99c1
+2025-09-25 12:47:00,942 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:47:00.942298 ====================
+2025-09-25 12:47:00,942 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 12:47:01,225 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 12:47:01,226 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:47:01.226243 ====================
+2025-09-25 12:48:18,400 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:48:18.400072 ====================
+2025-09-25 12:48:18,400 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 12:48:18,759 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 12:48:18,760 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:48:18.760586 ====================
+2025-09-25 12:48:57,212 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 12:49:24,037 — INFO — Página carregada (readyState complete).
+2025-09-25 12:49:24,071 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 12:49:40,174 — INFO — Menu 'File' aberto com sucesso.
+2025-09-25 12:49:57,587 — WARNING — Botão 'Create a Copy' não encontrado, tentando próximo...
+2025-09-25 12:49:58,648 — INFO — Botão 'Criar uma Cópia' clicado.
+2025-09-25 12:50:13,358 — INFO — Execução finalizada manualmente pelo usuário.
+2025-09-25 12:50:13,362 — WARNING — Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'Foi forçado o cancelamento de uma conexão existente pelo host remoto', None, 10054, None)': /session/48e826c4001f5efeff553d96a4647224
+2025-09-25 12:52:31,746 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:52:31.746028 ====================
+2025-09-25 12:52:31,746 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 12:52:32,027 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 12:52:32,028 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:52:32.027651 ====================
+2025-09-25 12:53:13,978 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 12:53:15,101 — INFO — Página carregada (readyState complete).
+2025-09-25 12:53:15,596 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 12:53:31,717 — INFO — Menu 'File' aberto com sucesso.
+2025-09-25 12:53:49,178 — WARNING — Botão 'Create a Copy' não encontrado, tentando próximo...
+2025-09-25 12:53:50,242 — INFO — Botão 'Criar uma Cópia' clicado.
+2025-09-25 12:54:05,645 — WARNING — Botão 'Download a Copy' não encontrado, tentando próximo...
+2025-09-25 12:54:21,108 — WARNING — Botão 'Baixar uma Cópia' não encontrado, tentando próximo...
+2025-09-25 12:54:22,185 — INFO — Botão 'Transferir uma Cópia' clicado.
+2025-09-25 12:54:22,185 — INFO — Download solicitado, aguardando arquivo aparecer...
+2025-09-25 12:54:24,188 — INFO — Arquivo baixado com sucesso.
+2025-09-25 12:54:24,190 — ERROR — Erro durante o ciclo: 'str' object has no attribute 'exists'
+2025-09-25 12:54:24,190 — INFO — Aguardando 30 segundos antes de tentar novamente...
+2025-09-25 12:54:59,837 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 12:54:59,838 — INFO — Arquivo antigo removido: C:\Projeto Motoristas\planilhas\Liberação de Motoristas e Ajudantes.xlsx
+2025-09-25 12:55:07,817 — INFO — Página carregada (readyState complete).
+2025-09-25 12:55:08,011 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 12:55:14,590 — INFO — Execução finalizada manualmente pelo usuário.
+2025-09-25 12:55:14,595 — WARNING — Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'Foi forçado o cancelamento de uma conexão existente pelo host remoto', None, 10054, None)': /session/966862cae6c35c979f6a1067fd63834c
+2025-09-25 12:59:28,020 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:59:28.020006 ====================
+2025-09-25 12:59:28,021 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 12:59:28,441 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 12:59:28,442 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 12:59:28.442886 ====================
+2025-09-25 13:00:20,185 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 13:00:23,427 — INFO — Página carregada (readyState complete).
+2025-09-25 13:00:23,591 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 13:00:39,722 — INFO — Menu 'File' aberto com sucesso.
+2025-09-25 13:00:57,168 — WARNING — Botão 'Create a Copy' não encontrado, tentando próximo...
+2025-09-25 13:00:58,238 — INFO — Botão 'Criar uma Cópia' clicado.
+2025-09-25 13:00:59,334 — INFO — Botão 'Transferir uma Cópia' clicado.
+2025-09-25 13:00:59,334 — INFO — Download solicitado, aguardando arquivo aparecer...
+2025-09-25 13:01:00,336 — INFO — Arquivo baixado com sucesso.
+2025-09-25 13:01:00,790 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 13:01:04,423 — INFO — Atualizando planilha, aguardando 15 segundos...
+2025-09-25 13:01:20,002 — INFO — Planilha atualizada e substituída sem bloqueios.
+2025-09-25 13:01:21,151 — INFO — Planilha auxiliar carregada.
+2025-09-25 13:01:21,175 — INFO — Enviando e-mail - ID: 13 | Nome: Deivide José timbo Araújo 
+2025-09-25 13:01:21,967 — INFO — E-mail enviado para oarthursacra@gmail.com
+2025-09-25 13:01:22,216 — INFO — Registro 13 salvo na auxiliar.
+2025-09-25 13:01:22,720 — INFO — Aguardando 10 segundos para próxima verificação...
+
+2025-09-25 13:01:41,122 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 13:01:41,123 — INFO — Arquivo antigo removido: C:\Projeto Motoristas\planilhas\Liberação de Motoristas e Ajudantes.xlsx
+2025-09-25 13:01:42,294 — INFO — Página carregada (readyState complete).
+2025-09-25 13:01:43,658 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 13:01:45,815 — INFO — Execução finalizada manualmente pelo usuário.
+2025-09-25 13:01:45,819 — WARNING — Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'Foi forçado o cancelamento de uma conexão existente pelo host remoto', None, 10054, None)': /session/8f7a8851a215e935ae7ba92cf81ef0ed
+2025-09-25 13:05:25,956 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 13:05:25.956300 ====================
+2025-09-25 13:05:25,956 — INFO — Bloqueio de suspensão e de desligamento de tela habilitado com sucesso.
+2025-09-25 13:05:26,288 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 13:05:26,289 — INFO — ==================== INÍCIO EXECUÇÃO 2025-09-25 13:05:26.289609 ====================
+2025-09-25 13:05:59,436 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 13:05:59,994 — INFO — Página carregada (readyState complete).
+2025-09-25 13:06:00,347 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 13:06:16,478 — INFO — Menu 'File' aberto com sucesso.
+2025-09-25 13:06:33,890 — WARNING — Botão 'Create a Copy' não encontrado, tentando próximo...
+2025-09-25 13:06:34,942 — INFO — Botão 'Criar uma Cópia' clicado.
+2025-09-25 13:06:36,005 — INFO — Botão 'Transferir uma Cópia' clicado.
+2025-09-25 13:06:36,005 — INFO — Download solicitado, aguardando arquivo aparecer...
+2025-09-25 13:06:37,009 — INFO — Arquivo baixado com sucesso.
+2025-09-25 13:06:37,393 — INFO — Excel finalizado para liberar arquivo.
+2025-09-25 13:06:39,599 — INFO — Atualizando planilha, aguardando 15 segundos...
+2025-09-25 13:06:54,951 — INFO — Planilha atualizada e substituída sem bloqueios.
+2025-09-25 13:06:55,484 — INFO — Planilha auxiliar carregada.
+2025-09-25 13:06:55,533 — INFO — Enviando e-mail - ID: 14 | Nome: JEFFERSON ALMEIDA VASCONSELOS	
+2025-09-25 13:06:55,774 — INFO — E-mail enviado para oarthursacra@gmail.com
+2025-09-25 13:06:55,900 — INFO — Registro 14 salvo na auxiliar.
+2025-09-25 13:06:56,405 — INFO — Aguardando 10 segundos para próxima verificação...
+
+2025-09-25 13:07:12,181 — INFO — Excel Online carregado e bypass aplicado.
+2025-09-25 13:07:12,184 — INFO — Arquivo antigo removido: C:\Projeto Motoristas\planilhas\Liberação de Motoristas e Ajudantes.xlsx
+2025-09-25 13:07:12,749 — INFO — Página carregada (readyState complete).
+2025-09-25 13:07:13,872 — INFO — Dentro do iframe do Excel Online.
+2025-09-25 13:07:29,971 — INFO — Menu 'File' aberto com sucesso.
+2025-09-25 13:07:32,908 — INFO — Execução finalizada manualmente pelo usuário.
+2025-09-25 13:07:32,911 — WARNING — Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'Foi forçado o cancelamento de uma conexão existente pelo host remoto', None, 10054, None)': /session/97d2cf63b1aa9820f995da8ed0706e69
+2025-09-25 13:07:36,959 — WARNING — Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D8BBBE7EF0>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')': /session/97d2cf63b1aa9820f995da8ed0706e69
+2025-09-25 13:07:40,999 — WARNING — Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D8BBBE7BC0>: Failed to establish a new connection: [WinError 10061] Nenhuma conexão pôde ser feita porque a máquina de destino as recusou ativamente')': /session/97d2cf63b1aa9820f995da8ed0706e69
+2025-09-25 13:07:45,058 — INFO — Driver fechado, script finalizado.
