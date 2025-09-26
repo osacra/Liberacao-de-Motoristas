@@ -1,0 +1,6 @@
+pandas
+selenium
+pywin32
+psutil
+pyautogui
+win10toast
