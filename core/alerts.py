@@ -1,18 +1,23 @@
 import logging
+import os
 from datetime import datetime
 from win10toast import ToastNotifier
 
+
 toaster = ToastNotifier()
 
-def configurar_logger():
+def configurar_logger(log_folder="logs", log_filename="liberacao_motoristas.log"):
+    log_path = os.path.join(log_folder, log_filename)
+
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s — %(levelname)s — %(message)s",
         handlers=[
-            logging.FileHandler("liberacao_motoristas.log", encoding="utf-8"),
+            logging.FileHandler(log_path, encoding="utf-8"),
             logging.StreamHandler()
         ]
     )
+
     logging.info(f"==================== INÍCIO EXECUÇÃO {datetime.now()} ====================")
 
 def alerta_erro(mensagem):

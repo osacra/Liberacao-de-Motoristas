@@ -18,7 +18,6 @@ import os
 configurar_logger()
 bloquear_suspensao_tela()
 fechar_processos_excel_outlook()
-configurar_logger()
 driver, wait = criar_driver()
 
 if not outlook_aberto():
