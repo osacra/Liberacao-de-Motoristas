@@ -1,0 +1,31 @@
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+.env
+.venv/
+env/
+venv/
+
+# IDEs
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Outros
+MANUAL_INSTALACAO.md
+README.md
+
+planilhas/
+driver/
+logs/
