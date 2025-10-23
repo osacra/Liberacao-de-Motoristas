@@ -8,7 +8,8 @@ import win32com.client as win32
 import win32gui
 import win32con
 from core.alerts import alerta_erro
-from config.settings import IMAGEM_EMAIL
+from config.settings import IMAGEM_EMAIL, DESTINATARIOS
+
 
 def outlook_aberto():
     import psutil
@@ -48,7 +49,7 @@ def enviar_email(destinatarios, assunto, corpo):
 
         outlook = win32.gencache.EnsureDispatch('Outlook.Application')
         mail = outlook.CreateItem(0)
-        mail.To = destinatarios
+        mail.To = "; ".join(DESTINATARIOS)
         mail.Subject = assunto
 
         if os.path.exists(IMAGEM_EMAIL):
