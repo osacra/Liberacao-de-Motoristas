@@ -194,7 +194,7 @@ class TelaInicial(QMainWindow):
         busca_layout = QHBoxLayout()
         busca_layout.addWidget(QLabel("Buscar:"))
         self.txt_busca = QLineEdit()
-        self.txt_busca.setPlaceholderText("Digite ID, Nome, CPF ou Placa...")
+        self.txt_busca.setPlaceholderText("Digite Nome, CPF ou Placa...")
         self.txt_busca.textChanged.connect(self.filtrar_tabela)
         busca_layout.addWidget(self.txt_busca)
         layout.addLayout(busca_layout)
@@ -212,6 +212,10 @@ class TelaInicial(QMainWindow):
         self.tabela_liberacoes.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         layout.addWidget(self.tabela_liberacoes)
 
+
+        self.tabela_liberacoes.setMinimumHeight(300)
+        self.tabela_liberacoes.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
     # ==============================================================
     # ABA LOGS
     # ==============================================================
@@ -226,27 +230,32 @@ class TelaInicial(QMainWindow):
     # ==============================================================
     # ABA CONFIGURAÇÕES
     # ==============================================================
+
     def _criar_aba_configuracoes(self, parent_widget):
         layout = QVBoxLayout(parent_widget)
         layout.setContentsMargins(10, 10, 10, 10)
+        layout.setSpacing(10)  # espaço mínimo entre widgets
+        layout.setSizeConstraint(QVBoxLayout.SetDefaultConstraint)  # não força esticar verticalmente
+
         import config.settings as settings
-        import os
 
         # --- Emails destinatários ---
         lbl_emails = QLabel("Emails destinatários (separados por vírgula):")
         self.txt_emails = QLineEdit()
         self.txt_emails.setText(", ".join(settings.DESTINATARIOS))
+        self.txt_emails.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         # --- Caminho da planilha oficial ---
         lbl_file_oficial = QLabel("Caminho da planilha oficial:")
         self.txt_file_oficial = QLineEdit()
         self.txt_file_oficial.setText(settings.FILE_OFICIAL)
+        self.txt_file_oficial.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         # --- Caminho da planilha auxiliar ---
         lbl_file_auxiliar = QLabel("Caminho da planilha auxiliar:")
         self.txt_file_auxiliar = QLineEdit()
         self.txt_file_auxiliar.setText(settings.FILE_AUXILIAR)
-
+        self.txt_file_auxiliar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
 
         # --- Botão Salvar ---
@@ -263,9 +272,10 @@ class TelaInicial(QMainWindow):
                 background-color: #45A049;
             }
         """)
+        btn_salvar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         btn_salvar.clicked.connect(self._salvar_configuracoes)
 
-
+        # --- Adicionando widgets ao layout ---
         layout.addWidget(lbl_emails)
         layout.addWidget(self.txt_emails)
         layout.addWidget(lbl_file_oficial)
