@@ -13,13 +13,10 @@ EXCEL_ONLINE_URL = (
     "sourcedoc=%7B0C4D4A4F-F9F0-42BD-A1B7-B5B3791A8E07%7D&file=Libera%C3%A7%C3%A3o%20de%20Motoristas%20e%20Ajudantes.xlsx&action=edit&mobileredirect=true&wdMsFormsCorrelationId=d6699260-89e5-441f-8de9-b165afbd4e14&wdtf=%20Microsoft.Office.Excel.FMsFormsMetadataInWorkbookMetadata%3Atrue"
 )
 DESTINATARIOS = [
-    'sacrarthur06@gmail.com',
+    'oarthursacra@gmail.com',
 ]
 
-
-
-
-NIVEL_LOG = 'DEBUG'
+NIVEL_LOG = 'INFO'
 
 # Driver e navegador
 EDGE_DRIVER_PATH = r"C:\Projeto Motoristas\driver\msedgedriver.exe"

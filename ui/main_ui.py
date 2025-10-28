@@ -146,7 +146,6 @@ class TelaInicial(QMainWindow):
         layout = QHBoxLayout(controles_group)
         layout.setAlignment(Qt.AlignHCenter)
         layout.setSpacing(20)
-
         btn_style = f"""
             QPushButton {{
                 background-color: {COR_TEXTO_STATUS_VERMELHO};
@@ -155,25 +154,15 @@ class TelaInicial(QMainWindow):
                 padding: 10px 20px;
                 border-radius: 4px;
             }}
-            QPushButton:hover {{
-                background-color: #b2001a;
-            }}
+            QPushButton:hover {{ background-color: #b2001a; }}
         """
-
         self.btn_iniciar = QPushButton("Iniciar Monitoramento")
-        self.btn_pausar = QPushButton("Pausar")
         self.btn_parar = QPushButton("Parar")
-        self.btn_verificacao_manual = QPushButton("Verificação Manual")
-
-        for btn in [self.btn_iniciar, self.btn_pausar, self.btn_parar, self.btn_verificacao_manual]:
+        for btn in [self.btn_iniciar, self.btn_parar]:
             btn.setStyleSheet(btn_style)
             layout.addWidget(btn)
-
         self.btn_iniciar.clicked.connect(self.iniciar_monitoramento)
-        self.btn_pausar.clicked.connect(self.pausar_monitoramento)
         self.btn_parar.clicked.connect(self.parar_monitoramento)
-        self.btn_verificacao_manual.clicked.connect(self.verificacao_manual)
-
         layout_principal.addWidget(controles_group)
 
     # ==============================================================
@@ -258,10 +247,7 @@ class TelaInicial(QMainWindow):
         self.txt_file_auxiliar = QLineEdit()
         self.txt_file_auxiliar.setText(settings.FILE_AUXILIAR)
 
-        # --- Nível de log ---
-        lbl_nivel_log = QLabel("Nível de log (DEBUG, INFO, WARNING, ERROR):")
-        self.txt_nivel_log = QLineEdit()
-        self.txt_nivel_log.setText(settings.NIVEL_LOG)
+
 
         # --- Botão Salvar ---
         btn_salvar = QPushButton("Salvar")
@@ -286,8 +272,6 @@ class TelaInicial(QMainWindow):
         layout.addWidget(self.txt_file_oficial)
         layout.addWidget(lbl_file_auxiliar)
         layout.addWidget(self.txt_file_auxiliar)
-        layout.addWidget(lbl_nivel_log)
-        layout.addWidget(self.txt_nivel_log)
         layout.addWidget(btn_salvar)
 
     def _salvar_configuracoes(self):
@@ -299,9 +283,9 @@ class TelaInicial(QMainWindow):
         novos_emails = [e.strip() for e in self.txt_emails.text().split(",") if e.strip()]
         file_oficial = self.txt_file_oficial.text().strip()
         file_auxiliar = self.txt_file_auxiliar.text().strip()
-        nivel_log = self.txt_nivel_log.text().strip().upper()
 
-        if not novos_emails or not file_oficial or not file_auxiliar or not nivel_log:
+
+        if not novos_emails or not file_oficial or not file_auxiliar:
             QMessageBox.warning(self, "Aviso", "Preencha todos os campos antes de salvar.")
             return
 
@@ -309,8 +293,6 @@ class TelaInicial(QMainWindow):
         settings.DESTINATARIOS = novos_emails
         settings.FILE_OFICIAL = file_oficial
         settings.FILE_AUXILIAR = file_auxiliar
-        settings.NIVEL_LOG = nivel_log
-
 
         arquivo_settings = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "settings.py")
 
@@ -338,9 +320,6 @@ class TelaInicial(QMainWindow):
                     elif linha.strip().startswith("FILE_AUXILIAR"):
                         f.write(f"FILE_AUXILIAR = r'{file_auxiliar}'\n")
                         i += 1
-                    elif linha.strip().startswith("NIVEL_LOG"):
-                        f.write(f"NIVEL_LOG = '{nivel_log}'\n")
-                        i += 1
                     else:
                         f.write(linha)
                         i += 1
@@ -355,7 +334,6 @@ class TelaInicial(QMainWindow):
         if caminho:
             line_edit.setText(caminho)
 
-
     # ==============================================================
     # LÓGICA PRINCIPAL
     # ==============================================================
@@ -363,33 +341,12 @@ class TelaInicial(QMainWindow):
     def iniciar_monitoramento(self):
         if not self.monitor_thread.is_running():
             self.monitor_thread.start()
-        elif self.monitor_thread.is_paused():
-            self.monitor_thread.resume()
-        self.atualizar_botoes()
-
-    def pausar_monitoramento(self):
-        if self.monitor_thread.is_running():
-            self.monitor_thread.pause()
         self.atualizar_botoes()
 
     def parar_monitoramento(self):
         if self.monitor_thread.is_running():
             self.monitor_thread.stop()
         self.atualizar_botoes()
-
-    def verificacao_manual(self):
-        if self.monitor_thread.is_running():
-            QMessageBox.warning(self, "Aviso", "Pare o monitoramento antes de executar manualmente.")
-            return
-        manual_thread = MonitoramentoThread()
-        manual_thread.status_changed.connect(self.atualizar_status)
-        manual_thread.log_message.connect(self.adicionar_log)
-        manual_thread.verificar_manual()
-
-    def parar_monitoramento_thread(self):
-        if self.monitor_thread.is_running():
-            self.monitor_thread.stop()
-            self.monitor_thread.wait()
 
     def atualizar_status(self, componente, status):
         if componente == "conexao_api":
@@ -409,14 +366,9 @@ class TelaInicial(QMainWindow):
 
     def atualizar_botoes(self):
         is_running = self.monitor_thread.is_running()
-        is_paused = self.monitor_thread.is_paused()
-        self.btn_iniciar.setEnabled(not is_running or is_paused)
-        self.btn_pausar.setEnabled(is_running and not is_paused)
+        self.btn_iniciar.setEnabled(not is_running)
         self.btn_parar.setEnabled(is_running)
-        self.btn_verificacao_manual.setEnabled(not is_running or is_paused)
-        self.btn_iniciar.setText("Monitorando..." if is_running and not is_paused else
-                                 "Retomar Monitoramento" if is_paused else
-                                 "Iniciar Monitoramento")
+        self.btn_iniciar.setText("Monitorando..." if is_running else "Iniciar Monitoramento")
 
     def atualizar_tabela_liberacoes(self):
         if not os.path.exists(FILE_AUXILIAR):
@@ -425,10 +377,8 @@ class TelaInicial(QMainWindow):
             return
 
         try:
-
             df = pd.read_excel(FILE_AUXILIAR, dtype={'Id': str})
             df['Id'] = df['Id'].astype(str).str.strip()
-
 
             colunas_origem = [
                 'Id', 'Nome do Motorista', 'CPF do Motorista',
@@ -438,17 +388,15 @@ class TelaInicial(QMainWindow):
                 if c not in df.columns:
                     df[c] = "N/A"
 
-
-            amostra = str(df['Data de Envio'].dropna().astype(str).iloc[0]) if not df[
-                'Data de Envio'].dropna().empty else ""
-            if "-" in amostra[:10]:
-
-                df['Data de Envio'] = pd.to_datetime(df['Data de Envio'], errors='coerce', dayfirst=False)
+            # Conversão de datas
+            if not df['Data de Envio'].dropna().empty:
+                amostra = str(df['Data de Envio'].dropna().astype(str).iloc[0])
+                dayfirst = "-" not in amostra[:10]
             else:
+                dayfirst = True
+            df['Data de Envio'] = pd.to_datetime(df['Data de Envio'], errors='coerce', dayfirst=dayfirst)
 
-                df['Data de Envio'] = pd.to_datetime(df['Data de Envio'], errors='coerce', dayfirst=True)
-
-
+            # Renomear colunas
             df = df.rename(columns={
                 'Id': 'ID',
                 'Nome do Motorista': 'Nome',
@@ -458,24 +406,24 @@ class TelaInicial(QMainWindow):
                 'Data de Envio': 'Data'
             })
 
-
+            # Filtro de busca
             termo = self.txt_busca.text().strip().lower()
             if termo:
                 df = df[df.apply(lambda r: r.astype(str).str.lower().str.contains(termo).any(), axis=1)]
 
-
             colunas_visiveis = ["ID", "Nome", "CPF", "Placa do Cavalo", "Placa da Carreta", "Data"]
             df = df[colunas_visiveis]
-
 
             self.tabela_liberacoes.setColumnCount(len(colunas_visiveis))
             self.tabela_liberacoes.setHorizontalHeaderLabels(colunas_visiveis)
             self.tabela_liberacoes.verticalHeader().setVisible(False)
             self.tabela_liberacoes.setRowCount(len(df))
+
+            # Total de liberações de hoje
             df_hoje = df[pd.to_datetime(df["Data"]).dt.date == date.today()]
             self.lbl_total_liberacoes.setText(str(len(df_hoje)))
 
-
+            # Preenchimento da tabela
             for i, (_, row) in enumerate(df.iterrows()):
                 for j, col in enumerate(colunas_visiveis):
                     valor = row[col]
@@ -496,12 +444,19 @@ if __name__ == "__main__":
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps)
     app = QApplication(sys.argv)
+
+    # Paleta de cores
     palette = app.palette()
     palette.setColor(QPalette.Window, QColor(COR_FUNDO_CINZA))
     palette.setColor(QPalette.Base, Qt.white)
     palette.setColor(QPalette.AlternateBase, QColor("#EAEAEA"))
     app.setPalette(palette)
+
+    # Janela principal
     janela = TelaInicial()
     janela.show()
-    app.aboutToQuit.connect(janela.parar_monitoramento_thread)
+
+    # Garantir parada da thread ao sair
+    app.aboutToQuit.connect(janela.parar_monitoramento)
+
     sys.exit(app.exec())
