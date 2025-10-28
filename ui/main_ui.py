@@ -12,6 +12,7 @@ import time
 import os
 import pandas as pd
 from config.settings import FILE_AUXILIAR
+from datetime import date
 
 # --- Constantes de Estilo ---
 COR_DHL_AMARELO = "#fecb12"
@@ -57,6 +58,7 @@ class TelaInicial(QMainWindow):
     # ==============================================================
     # HEADER
     # ==============================================================
+
     def _criar_header(self, layout_principal):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         caminho_logo = os.path.join(base_dir, "assets", "logo.png")
@@ -95,14 +97,19 @@ class TelaInicial(QMainWindow):
         """)
         btn_sair.clicked.connect(self.close)
 
+
         header_layout.addWidget(logo_label, 0, Qt.AlignVCenter)
-        header_layout.addWidget(titulo_label, 1, Qt.AlignHCenter)
+        header_layout.addStretch(1)
+        header_layout.addWidget(titulo_label, 0, Qt.AlignHCenter | Qt.AlignVCenter)
+        header_layout.addStretch(1)
         header_layout.addWidget(btn_sair, 0, Qt.AlignVCenter)
+
         layout_principal.addWidget(header_widget)
 
     # ==============================================================
     # STATUS
     # ==============================================================
+
     def _criar_status_sistema(self, layout_principal):
         status_group = QGroupBox("Status do Sistema")
         status_layout = QHBoxLayout(status_group)
@@ -124,7 +131,9 @@ class TelaInicial(QMainWindow):
         status_layout.addWidget(self.lbl_monitoramento)
         status_layout.addWidget(QLabel("Última Verificação:"))
         status_layout.addWidget(self.lbl_ultima_verificacao)
-        status_layout.addWidget(QLabel("Total de Liberações:"))
+
+        # ALTERAÇÃO: Especificando "Total de Liberações (Hoje)"
+        status_layout.addWidget(QLabel("Total de Liberações (Hoje):"))
         status_layout.addWidget(self.lbl_total_liberacoes)
 
         layout_principal.addWidget(status_group)
@@ -202,9 +211,12 @@ class TelaInicial(QMainWindow):
         layout.addLayout(busca_layout)
 
         self.tabela_liberacoes = QTableWidget()
-        colunas = ["ID", "Nome", "CPF", "Placa", "Data", "Status"]
-        self.tabela_liberacoes.setColumnCount(len(colunas))
-        self.tabela_liberacoes.setHorizontalHeaderLabels(colunas)
+
+
+        colunas_gui = ["ID", "Nome", "CPF", "Placa do Cavalo", "Placa da Carreta", "Data"]
+
+        self.tabela_liberacoes.setColumnCount(len(colunas_gui))
+        self.tabela_liberacoes.setHorizontalHeaderLabels(colunas_gui)
         self.tabela_liberacoes.verticalHeader().setVisible(False)
         self.tabela_liberacoes.setEditTriggers(QTableWidget.NoEditTriggers)
         self.tabela_liberacoes.setSelectionBehavior(QTableWidget.SelectRows)
@@ -267,7 +279,7 @@ class TelaInicial(QMainWindow):
         """)
         btn_salvar.clicked.connect(self._salvar_configuracoes)
 
-        # --- Adiciona widgets ao layout ---
+
         layout.addWidget(lbl_emails)
         layout.addWidget(self.txt_emails)
         layout.addWidget(lbl_file_oficial)
@@ -283,7 +295,7 @@ class TelaInicial(QMainWindow):
         import os
         from PySide6.QtWidgets import QMessageBox
 
-        # --- Coleta valores ---
+
         novos_emails = [e.strip() for e in self.txt_emails.text().split(",") if e.strip()]
         file_oficial = self.txt_file_oficial.text().strip()
         file_auxiliar = self.txt_file_auxiliar.text().strip()
@@ -293,13 +305,13 @@ class TelaInicial(QMainWindow):
             QMessageBox.warning(self, "Aviso", "Preencha todos os campos antes de salvar.")
             return
 
-        # --- Atualiza variáveis do módulo ---
+
         settings.DESTINATARIOS = novos_emails
         settings.FILE_OFICIAL = file_oficial
         settings.FILE_AUXILIAR = file_auxiliar
         settings.NIVEL_LOG = nivel_log
 
-        # --- Caminho do arquivo settings.py ---
+
         arquivo_settings = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "settings.py")
 
         try:
@@ -314,8 +326,8 @@ class TelaInicial(QMainWindow):
                         # Ignora todas as linhas até encontrar o fechamento da lista
                         while i < len(linhas) and "]" not in linhas[i]:
                             i += 1
-                        i += 1  # pula a linha que contém "]"
-                        # Escreve a nova lista
+                        i += 1
+
                         f.write("DESTINATARIOS = [\n")
                         for email in novos_emails:
                             f.write(f"    '{email}',\n")
@@ -411,29 +423,67 @@ class TelaInicial(QMainWindow):
             self.tabela_liberacoes.setRowCount(0)
             self.lbl_total_liberacoes.setText("0")
             return
+
         try:
+
             df = pd.read_excel(FILE_AUXILIAR, dtype={'Id': str})
             df['Id'] = df['Id'].astype(str).str.strip()
-            colunas = ['Id', 'Nome do Motorista', 'CPF do Motorista', 'Placa do Cavalo', 'Data de Envio', 'Status']
-            for c in colunas:
+
+
+            colunas_origem = [
+                'Id', 'Nome do Motorista', 'CPF do Motorista',
+                'Placa do Cavalo', 'Placa da Carreta', 'Data de Envio'
+            ]
+            for c in colunas_origem:
                 if c not in df.columns:
                     df[c] = "N/A"
-            df = df.rename(columns={'Id': 'ID', 'Nome do Motorista': 'Nome', 'CPF do Motorista': 'CPF',
-                                    'Placa do Cavalo': 'Placa', 'Data de Envio': 'Data'})
+
+
+            amostra = str(df['Data de Envio'].dropna().astype(str).iloc[0]) if not df[
+                'Data de Envio'].dropna().empty else ""
+            if "-" in amostra[:10]:
+
+                df['Data de Envio'] = pd.to_datetime(df['Data de Envio'], errors='coerce', dayfirst=False)
+            else:
+
+                df['Data de Envio'] = pd.to_datetime(df['Data de Envio'], errors='coerce', dayfirst=True)
+
+
+            df = df.rename(columns={
+                'Id': 'ID',
+                'Nome do Motorista': 'Nome',
+                'CPF do Motorista': 'CPF',
+                'Placa do Cavalo': 'Placa do Cavalo',
+                'Placa da Carreta': 'Placa da Carreta',
+                'Data de Envio': 'Data'
+            })
+
+
             termo = self.txt_busca.text().strip().lower()
             if termo:
                 df = df[df.apply(lambda r: r.astype(str).str.lower().str.contains(termo).any(), axis=1)]
+
+
+            colunas_visiveis = ["ID", "Nome", "CPF", "Placa do Cavalo", "Placa da Carreta", "Data"]
+            df = df[colunas_visiveis]
+
+
+            self.tabela_liberacoes.setColumnCount(len(colunas_visiveis))
+            self.tabela_liberacoes.setHorizontalHeaderLabels(colunas_visiveis)
+            self.tabela_liberacoes.verticalHeader().setVisible(False)
             self.tabela_liberacoes.setRowCount(len(df))
-            self.lbl_total_liberacoes.setText(str(len(df)))
-            for i, r in df.iterrows():
-                for j, c in enumerate(df.columns):
-                    item = QTableWidgetItem(str(r[c]))
-                    if c == "Status":
-                        cor = (COR_TEXTO_STATUS_VERDE if r[c].lower() == "liberado"
-                               else "#FFA500" if r[c].lower() == "pendente"
-                               else COR_TEXTO_STATUS_VERMELHO)
-                        item.setForeground(QColor(cor))
+            df_hoje = df[pd.to_datetime(df["Data"]).dt.date == date.today()]
+            self.lbl_total_liberacoes.setText(str(len(df_hoje)))
+
+
+            for i, (_, row) in enumerate(df.iterrows()):
+                for j, col in enumerate(colunas_visiveis):
+                    valor = row[col]
+                    if col == "Data" and pd.notna(valor):
+                        valor = valor.strftime("%d/%m/%Y %H:%M:%S")
+                    item = QTableWidgetItem(str(valor))
                     self.tabela_liberacoes.setItem(i, j, item)
+
         except Exception as e:
             self.adicionar_log(f"ERRO: {e}")
             self.tabela_liberacoes.setRowCount(0)
