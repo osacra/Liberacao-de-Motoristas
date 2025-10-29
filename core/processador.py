@@ -7,7 +7,7 @@ import pythoncom
 from config.settings import DOWNLOADED_FILE, FILE_AUXILIAR, DESTINATARIOS
 from core.utils import mexer_mouse, esperar_arquivo_liberar, obter_saudacao
 from core.email_handler import enviar_email, abrir_outlook_minimizado
-from core.excel_handler import atualizar_planilha_excel, fechar_processos_excel_outlook
+from core.excel_handler import atualizar_planilha_excel, fechar_processos_excel_outlook, padronizar_dados
 
 
 def processar_envios():
@@ -25,13 +25,13 @@ def processar_envios():
             return
 
         # Carrega planilha oficial
-        df_oficial = pd.read_excel(DOWNLOADED_FILE, dtype={'Id': str})
-        df_oficial['Id'] = df_oficial['Id'].astype(str).str.strip()
+        df_oficial = pd.read_excel(DOWNLOADED_FILE, dtype=str)
+        df_oficial = padronizar_dados(df_oficial)
 
         # Carrega planilha auxiliar
         try:
-            df_aux = pd.read_excel(FILE_AUXILIAR, dtype={'Id': str})
-            df_aux['Id'] = df_aux['Id'].astype(str).str.strip()
+            df_aux = pd.read_excel(FILE_AUXILIAR, dtype=str)
+            df_aux = padronizar_dados(df_aux)
             logging.info("Planilha auxiliar carregada.")
         except FileNotFoundError:
             df_aux = pd.DataFrame(columns=['Id', 'Data de Envio', 'Nome do Motorista','CPF do Motorista', 'Placa do Cavalo', 'Placa da Carreta', 'Nome do Ajudante 1', 'CPF do Ajudante 1', 'Nome do Ajudante 2', 'CPF do Ajudante 2'])

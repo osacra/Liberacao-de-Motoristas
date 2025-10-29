@@ -6,6 +6,8 @@ import gc
 import pythoncom
 import win32com.client as win32
 from core.alerts import alerta_erro
+import pandas as pd
+import re
 
 def fechar_processos_excel_outlook():
     import subprocess
@@ -82,3 +84,62 @@ def atualizar_planilha_excel(caminho_arquivo):
     except Exception as e:
         logging.error(f"Erro ao atualizar planilha: {e}")
         alerta_erro(f"Erro ao atualizar planilha: {e}")
+
+
+def padronizar_cpf(cpf: str) -> str:
+
+    if not isinstance(cpf, str):
+        return ''
+
+    numeros = re.sub(r'\D', '', cpf)
+
+    return f"{numeros[:3]}.{numeros[3:6]}.{numeros[6:9]}-{numeros[9:]}"
+
+
+def padronizar_dados(df: pd.DataFrame) -> pd.DataFrame:
+
+    df = df.copy()
+
+    # Função interna para padronizar CPF
+    def formatar_cpf(cpf: str) -> str:
+        if not isinstance(cpf, str):
+            return ''
+        numeros = re.sub(r'\D', '', cpf)
+        if len(numeros) != 11:
+            return ''
+        return f"{numeros[:3]}.{numeros[3:6]}.{numeros[6:9]}-{numeros[9:]}"
+
+    # ID
+    if 'Id' in df.columns:
+        df['Id'] = df['Id'].astype(str).str.strip()
+
+    # Nome do Motorista
+    if 'Nome do Motorista' in df.columns:
+        df['Nome do Motorista'] = df['Nome do Motorista'].astype(str).str.strip().str.title()
+
+    # CPF do Motorista
+    if 'CPF do Motorista' in df.columns:
+        df['CPF do Motorista'] = df['CPF do Motorista'].apply(formatar_cpf)
+
+    # Placa do Cavalo
+    if 'Placa do Cavalo' in df.columns:
+        df['Placa do Cavalo'] = df['Placa do Cavalo'].astype(str).str.replace(r'\s+', '', regex=True).str.upper()
+
+    # Placa da Carreta
+    if 'Placa da Carreta' in df.columns:
+        df['Placa da Carreta'] = df['Placa da Carreta'].astype(str).str.replace(r'\s+', '', regex=True).str.upper()
+
+    # Ajudantes
+    for i in range(1, 6):
+        nome_col = f"Nome do Ajudante {i}"
+        cpf_col = f"CPF do Ajudante {i}"
+
+        if nome_col in df.columns:
+            df[nome_col] = df[nome_col].astype(str).str.strip().str.title().replace({'': ''})
+        if cpf_col in df.columns:
+            df[cpf_col] = df[cpf_col].apply(padronizar_cpf)
+
+    return df
+
+
+
