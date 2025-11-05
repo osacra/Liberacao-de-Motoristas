@@ -163,26 +163,35 @@ def padronizar_dados(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def atualizar_base_motoristas(df_forms: pd.DataFrame):
+    """
+    Atualiza a base de motoristas (CAMINHO_BASE) conforme respostas de cadastro no Forms.
+    - Padroniza os dados do Forms antes de comparar.
+    - Se CPF não existir: adiciona novo motorista.
+    - Se CPF existir: atualiza nome e e-mail.
+    """
 
+    colunas_base = ["Nome do Motorista", "CPF do Motorista", "E-mail do Solicitante"]
 
     # Garante que a base exista e contenha as colunas necessárias
     if not os.path.exists(CAMINHO_BASE):
-        base_df = pd.DataFrame(columns=["Nome do Motorista", "CPF do Motorista", "E-mail do Solicitante"])
+        base_df = pd.DataFrame(columns=colunas_base)
     else:
         base_df = pd.read_excel(CAMINHO_BASE, dtype=str)
-        for col in ["Nome do Motorista", "CPF do Motorista", "E-mail do Solicitante"]:
+
+        # Mantém apenas as colunas certas na base
+        for col in colunas_base:
             if col not in base_df.columns:
                 base_df[col] = ""
+        base_df = base_df[colunas_base]  # Reordena e remove colunas extras
 
-    # Padroniza os dados do Forms para comparação
+    # Padroniza os dados do Forms
     df_forms = df_forms.copy()
     df_forms["Nome do Novo Motorista"] = df_forms["Nome do Novo Motorista"].astype(str).str.strip().str.title()
     df_forms["CPF do Novo Motorista"] = df_forms["CPF do Novo Motorista"].apply(padronizar_cpf)
     df_forms["Insira seu e-mail"] = df_forms["Insira seu e-mail"].astype(str).str.strip()
 
-
+    # Filtra apenas os cadastros
     cadastros = df_forms[df_forms["O que você deseja fazer?"].str.lower().str.contains("cadastro")]
-
     if cadastros.empty:
         return
 
@@ -193,7 +202,6 @@ def atualizar_base_motoristas(df_forms: pd.DataFrame):
 
         if not cpf or not nome:
             continue
-
 
         existe = checar_cpf(cpf, CAMINHO_BASE)
 
@@ -212,10 +220,11 @@ def atualizar_base_motoristas(df_forms: pd.DataFrame):
             })
             base_df = pd.concat([base_df, nova_linha], ignore_index=True)
 
+    # Garante que a ordem das colunas permaneça correta antes de salvar
+    base_df = base_df[colunas_base]
 
     try:
         base_df.to_excel(CAMINHO_BASE, index=False)
         print("✅ Base de motoristas atualizada com sucesso.")
     except Exception as e:
         print(f"⚠️ Erro ao salvar a base de motoristas: {e}")
-
