@@ -9,23 +9,23 @@ from core.excel_handler import atualizar_planilha_excel, fechar_processos_excel_
 from core.excel_handler import atualizar_base_motoristas, checar_cpf
 
 
-def motorista_nao_autorizado(nome_motorista: str, cpf_motorista: str):
+def motorista_nao_autorizado(nome_motorista: str, cpf_motorista: str, email_destino: str):
     try:
         saudacao = obter_saudacao()
         assunto = "Motorista não autorizado na base"
         corpo = (
-            f"{saudacao}, portaria!\n\n"
+            f"{saudacao}\n\n"
             "O motorista abaixo NÃO foi liberado pois o CPF informado não consta na base de autorizados.\n\n"
             f"Nome: {nome_motorista}\n"
             f"CPF: {cpf_motorista}\n\n"
-            "Favor verificar se o cadastro está atualizado ou se há necessidade de inclusão na base."
+            "Favor realizar o cadastro do motorista no formulário."
         )
 
         abrir_outlook_minimizado()
-        sucesso = enviar_email(DESTINATARIOS, assunto, corpo)
+        sucesso = enviar_email(email_destino, assunto, corpo)
 
         if sucesso:
-            logging.info(f"E-mail de motorista não liberado enviado para {DESTINATARIOS}: {nome_motorista} ({cpf_motorista})")
+            logging.info(f"E-mail de motorista não liberado enviado para {email_destino}: {nome_motorista} ({cpf_motorista})")
         else:
             logging.warning(f"Falha ao enviar e-mail de motorista não liberado: {nome_motorista} ({cpf_motorista})")
 
@@ -62,7 +62,7 @@ def processar_envios():
             ])
             logging.info("Planilha auxiliar criada, pois não existia.")
 
-        #  CASO 1 — Cadastro de Motorista
+        # CASO 1 — Cadastro de Motorista
         if "O que você deseja fazer?" in df_oficial.columns:
             novos_cadastros = df_oficial[
                 (df_oficial["O que você deseja fazer?"].str.strip().str.lower() == "cadastro de motorista")
@@ -86,7 +86,7 @@ def processar_envios():
                     status = "Cadastro Atualizado" if existe else "Novo Cadastro"
 
                     dados = {
-                        'Id': str(linha['Id']).strip(),
+                        'Id': str(linha.get('Id', '')).strip(),
                         'Data de Envio': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                         'Nome do Motorista': nome,
                         'CPF do Motorista': cpf,
@@ -100,7 +100,7 @@ def processar_envios():
                     }
 
                     dados_df = pd.DataFrame([dados])
-                    dados_df = padronizar_dados(dados_df)  # 🔹 garante padronização antes de salvar
+                    dados_df = padronizar_dados(dados_df)
                     df_aux = pd.concat([df_aux, dados_df], ignore_index=True)
                     logging.info(f"{status} processado para {nome} ({cpf}).")
 
@@ -108,7 +108,7 @@ def processar_envios():
                 logging.info("Cadastros processados e salvos na planilha auxiliar.")
                 return  # encerra aqui, não envia e-mail
 
-        #  CASO 2 — Liberação de Motorista
+        # CASO 2 — Liberação de Motorista
         novos_registros = df_oficial[
             (df_oficial["O que você deseja fazer?"].str.strip().str.lower() == "liberação de motorista")
             & (~df_oficial['Id'].isin(df_aux['Id']))
@@ -119,23 +119,26 @@ def processar_envios():
             return
 
         primeiro = novos_registros.iloc[0]
-        nome_motorista = str(primeiro.at['Nome do Motorista']).strip()
-        cpf = str(primeiro.at['CPF do Motorista']).strip()
-        placa_cavalo = str(primeiro.at['Placa do Cavalo']).strip() or 'Sem Placa Cavalo'
+        nome_motorista = str(primeiro.get('Nome do Motorista', '')).strip()
+        cpf = str(primeiro.get('CPF do Motorista', '')).strip()
+        placa_cavalo = str(primeiro.get('Placa do Cavalo', '')).strip() or 'Sem Placa Cavalo'
         saudacao = obter_saudacao()
 
         texto_carreta = ""
-        if 'O veículo possui carreta?' in primeiro and str(primeiro['O veículo possui carreta?']).strip().lower() == "sim":
+        if 'O veículo possui carreta?' in primeiro and str(primeiro.get('O veículo possui carreta?', '')).strip().lower() == "sim":
             placa_carreta = str(primeiro.get('Placa da Carreta', '')).strip()
             if placa_carreta and placa_carreta.lower() not in ['nan', 'none', '']:
                 texto_carreta = f"Placa da carreta: {placa_carreta}\n"
         else:
             placa_carreta = ""
 
-        # Verifica se o motorista está na base
+        # Email do Forms
+        email_destino = str(primeiro.get('Insira seu e-mail', '')).strip()
+
         if not checar_cpf(cpf, CAMINHO_BASE):
             logging.warning(f"Motorista {nome_motorista} ({cpf}) não encontrado na base — liberação bloqueada.")
-            motorista_nao_autorizado(nome_motorista, cpf)
+            if email_destino:
+                motorista_nao_autorizado(nome_motorista, cpf, email_destino)
             status_registro = 'Não Liberado'
         else:
             corpo = (
@@ -168,9 +171,9 @@ def processar_envios():
             envio_sucesso = enviar_email(DESTINATARIOS, "Liberação de Motorista", corpo)
             status_registro = 'Liberado' if envio_sucesso else 'Não Liberado'
 
-
+        # Salvando registro na planilha auxiliar
         dados = {
-            'Id': str(primeiro.at['Id']).strip(),
+            'Id': str(primeiro.get('Id', '')).strip(),
             'Data de Envio': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
             'Nome do Motorista': nome_motorista,
             'CPF do Motorista': cpf,
@@ -182,14 +185,14 @@ def processar_envios():
         for i in range(1, 3):
             nome_col = f"Nome do Ajudante {i}"
             cpf_col = f"CPF do Ajudante {i}"
-            dados[nome_col] = str(primeiro.at.get(nome_col, '')).strip()
-            dados[cpf_col] = str(primeiro.at.get(cpf_col, '')).strip()
+            dados[nome_col] = str(primeiro.get(nome_col, '')).strip()
+            dados[cpf_col] = str(primeiro.get(cpf_col, '')).strip()
 
         dados_df = pd.DataFrame([dados])
-        dados_df = padronizar_dados(dados_df)  # 🔹 garante padronização
+        dados_df = padronizar_dados(dados_df)
         df_aux = pd.concat([df_aux, dados_df], ignore_index=True)
         df_aux.to_excel(FILE_AUXILIAR, index=False)
-        logging.info(f"Registro {primeiro.at['Id']} salvo na auxiliar com status: {status_registro}.")
+        logging.info(f"Registro {primeiro.get('Id', '')} salvo na auxiliar com status: {status_registro}.")
 
         mexer_mouse()
 

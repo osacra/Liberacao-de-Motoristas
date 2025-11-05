@@ -1,11 +1,12 @@
 
 # Diretórios e arquivos
-DOWNLOAD_PATH = r"C:\Projeto Motoristas\planilhas"
+DOWNLOAD_PATH = r"C:\Users\dwbe01\Downloads\ProjetoMotoristas_GUI\ProjetoMotoristas\planilhas"
 FILE_NAME = "Liberação de Motoristas.xlsx"
 DOWNLOADED_FILE = f"{DOWNLOAD_PATH}\\{FILE_NAME}"  
 FILE_AUXILIAR = r'C:\Users\dwbe01\Downloads\ProjetoMotoristas_GUI\ProjetoMotoristas\planilhas\Liberação de Motoristas - Auxiliar.xlsx'
 CAMINHO_BASE = r"C:\Users\dwbe01\Downloads\ProjetoMotoristas_GUI\ProjetoMotoristas\planilhas\Cadastro dos Motoristas1.xlsx"
 FILE_OFICIAL = r'C:\Projeto Motoristas\planilhas\Liberação de Motoristas e Ajudantes.xlsx'
+
 
 # URLs e destinatários
 

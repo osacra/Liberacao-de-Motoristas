@@ -49,7 +49,12 @@ def enviar_email(destinatarios, assunto, corpo):
 
         outlook = win32.gencache.EnsureDispatch('Outlook.Application')
         mail = outlook.CreateItem(0)
-        mail.To = "; ".join(DESTINATARIOS)
+
+        if isinstance(destinatarios, list):
+            mail.To = "; ".join(destinatarios)
+        else:
+            mail.To = str(destinatarios)
+
         mail.Subject = assunto
 
         if os.path.exists(IMAGEM_EMAIL):
