@@ -22,7 +22,7 @@ if __name__ == "__main__":
     janela = TelaInicial()
     janela.show()
     
-    # Conecta o sinal aboutToQuit para garantir que a thread de monitoramento seja parada
-    app.aboutToQuit.connect(janela.parar_monitoramento_thread)
+
+    app.aboutToQuit.connect(janela.parar_monitoramento)
     
     sys.exit(app.exec())

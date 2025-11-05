@@ -8,6 +8,26 @@ import win32com.client as win32
 from core.alerts import alerta_erro
 import pandas as pd
 import re
+from config.settings import CAMINHO_BASE
+
+
+
+def checar_cpf(cpf_motorista, CAMINHO_BASE: str) -> bool:
+    try:
+        if isinstance(cpf_motorista, pd.Series):
+            cpf_motorista = cpf_motorista.iloc[0]  # Pega o primeiro valor se for Series
+
+        cpf_motorista = str(cpf_motorista).strip()
+        base = pd.read_excel(CAMINHO_BASE, dtype=str)
+
+        if "CPF do Motorista" not in base.columns:
+            raise KeyError("A base não contém uma coluna chamada 'CPF do Motorista'.")
+
+        return cpf_motorista in base["CPF do Motorista"].astype(str).str.strip().values
+
+    except Exception as e:
+        print(f"Erro ao verificar CPF na base: {e}")
+        return False
 
 def fechar_processos_excel_outlook():
     import subprocess
@@ -46,7 +66,7 @@ def esperar_refresh_concluir(workbook, timeout=60):
 
 
 def atualizar_planilha_excel(caminho_arquivo):
-    """Abre, atualiza e salva planilha Excel usando COM"""
+
     try:
         pythoncom.CoInitialize()
 
@@ -100,7 +120,7 @@ def padronizar_dados(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.copy()
 
-    # Função interna para padronizar CPF
+
     def formatar_cpf(cpf: str) -> str:
         if not isinstance(cpf, str):
             return ''
@@ -142,4 +162,60 @@ def padronizar_dados(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def atualizar_base_motoristas(df_forms: pd.DataFrame):
+
+
+    # Garante que a base exista e contenha as colunas necessárias
+    if not os.path.exists(CAMINHO_BASE):
+        base_df = pd.DataFrame(columns=["Nome do Motorista", "CPF do Motorista", "E-mail do Solicitante"])
+    else:
+        base_df = pd.read_excel(CAMINHO_BASE, dtype=str)
+        for col in ["Nome do Motorista", "CPF do Motorista", "E-mail do Solicitante"]:
+            if col not in base_df.columns:
+                base_df[col] = ""
+
+    # Padroniza os dados do Forms para comparação
+    df_forms = df_forms.copy()
+    df_forms["Nome do Novo Motorista"] = df_forms["Nome do Novo Motorista"].astype(str).str.strip().str.title()
+    df_forms["CPF do Novo Motorista"] = df_forms["CPF do Novo Motorista"].apply(padronizar_cpf)
+    df_forms["Insira seu e-mail"] = df_forms["Insira seu e-mail"].astype(str).str.strip()
+
+
+    cadastros = df_forms[df_forms["O que você deseja fazer?"].str.lower().str.contains("cadastro")]
+
+    if cadastros.empty:
+        return
+
+    for _, linha in cadastros.iterrows():
+        nome = linha["Nome do Novo Motorista"]
+        cpf = linha["CPF do Novo Motorista"]
+        email = linha["Insira seu e-mail"]
+
+        if not cpf or not nome:
+            continue
+
+
+        existe = checar_cpf(cpf, CAMINHO_BASE)
+
+        if existe:
+            # Atualiza nome e e-mail onde o CPF for igual
+            base_df.loc[
+                base_df["CPF do Motorista"].astype(str).str.strip() == cpf,
+                ["Nome do Motorista", "E-mail do Solicitante"]
+            ] = [nome, email]
+        else:
+            # Adiciona novo motorista
+            nova_linha = pd.DataFrame({
+                "Nome do Motorista": [nome],
+                "CPF do Motorista": [cpf],
+                "E-mail do Solicitante": [email]
+            })
+            base_df = pd.concat([base_df, nova_linha], ignore_index=True)
+
+
+    try:
+        base_df.to_excel(CAMINHO_BASE, index=False)
+        print("✅ Base de motoristas atualizada com sucesso.")
+    except Exception as e:
+        print(f"⚠️ Erro ao salvar a base de motoristas: {e}")
 
