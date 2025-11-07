@@ -13,6 +13,7 @@ import os
 import pandas as pd
 from config.settings import FILE_AUXILIAR
 from datetime import date
+from PySide6.QtGui import QIcon
 
 # --- Constantes de Estilo ---
 COR_DHL_AMARELO = "#fecb12"
@@ -27,6 +28,8 @@ class TelaInicial(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Sistema de Liberação de Motoristas v2.0 Desktop")
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        self.setWindowIcon(QIcon(os.path.join(base_dir, "assets", "app.ico")))
         self.resize(1000, 700)
         self.setStyleSheet(f"background-color: {COR_FUNDO_CINZA};")
 
@@ -245,11 +248,7 @@ class TelaInicial(QMainWindow):
         self.txt_emails.setText(", ".join(settings.DESTINATARIOS))
         self.txt_emails.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
-        # --- Caminho da planilha oficial ---
-        lbl_file_oficial = QLabel("Caminho da planilha oficial:")
-        self.txt_file_oficial = QLineEdit()
-        self.txt_file_oficial.setText(settings.FILE_OFICIAL)
-        self.txt_file_oficial.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
 
         # --- Caminho da planilha auxiliar ---
         lbl_file_auxiliar = QLabel("Caminho da planilha auxiliar:")
@@ -278,8 +277,7 @@ class TelaInicial(QMainWindow):
         # --- Adicionando widgets ao layout ---
         layout.addWidget(lbl_emails)
         layout.addWidget(self.txt_emails)
-        layout.addWidget(lbl_file_oficial)
-        layout.addWidget(self.txt_file_oficial)
+
         layout.addWidget(lbl_file_auxiliar)
         layout.addWidget(self.txt_file_auxiliar)
         layout.addWidget(btn_salvar)
@@ -291,17 +289,16 @@ class TelaInicial(QMainWindow):
 
 
         novos_emails = [e.strip() for e in self.txt_emails.text().split(",") if e.strip()]
-        file_oficial = self.txt_file_oficial.text().strip()
+
         file_auxiliar = self.txt_file_auxiliar.text().strip()
 
 
-        if not novos_emails or not file_oficial or not file_auxiliar:
+        if not novos_emails  or not file_auxiliar:
             QMessageBox.warning(self, "Aviso", "Preencha todos os campos antes de salvar.")
             return
 
 
         settings.DESTINATARIOS = novos_emails
-        settings.FILE_OFICIAL = file_oficial
         settings.FILE_AUXILIAR = file_auxiliar
 
         arquivo_settings = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "settings.py")
@@ -324,9 +321,6 @@ class TelaInicial(QMainWindow):
                         for email in novos_emails:
                             f.write(f"    '{email}',\n")
                         f.write("]\n")
-                    elif linha.strip().startswith("FILE_OFICIAL"):
-                        f.write(f"FILE_OFICIAL = r'{file_oficial}'\n")
-                        i += 1
                     elif linha.strip().startswith("FILE_AUXILIAR"):
                         f.write(f"FILE_AUXILIAR = r'{file_auxiliar}'\n")
                         i += 1
