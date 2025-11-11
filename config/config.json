@@ -1,0 +1,34 @@
+{
+    "arquivos": {
+        "download_path": "planilhas",
+        "file_name": "Liberação de Motoristas.xlsx",
+        "file_auxiliar": "C:\\Users\\dwbe01\\Downloads\\ProjetoMotoristas_GUI\\ProjetoMotoristas\\planilhas\\Liberação de Motoristas - Auxiliar.xlsx",
+        "caminho_base": "Cadastro dos Motoristas1.xlsx"
+    },
+    "urls": {
+        "excel_online": "https://dpdhl-my.sharepoint.com/:x:/r/personal/arthur_mendessacramento_dhl_com/_layouts/15/Doc.aspx?sourcedoc=%7B70A1618C-C082-4E6D-8DF0-AEA614CFB622%7D&file=Libera%C3%A7%C3%A3o%20de%20Motoristas.xlsx&action=edit&mobileredirect=true"
+    },
+    "emails": {
+        "destinatarios": [
+            "oarthursacra@gmail.com",
+            "sacrarthur06@gmail.com"
+        ]
+    },
+    "driver": {
+        "path": "drivers/msedgedriver.exe",
+        "options": {
+            "headless": true,
+            "disable_gpu": true,
+            "disable_extensions": true,
+            "disable_popup_blocking": true,
+            "no_sandbox": true,
+            "disable_dev_shm_usage": true
+        }
+    },
+    "logging": {
+        "nivel": "INFO"
+    },
+    "email_assets": {
+        "imagem": "assets/imagem-dhl.png"
+    }
+}

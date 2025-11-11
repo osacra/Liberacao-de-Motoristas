@@ -1,49 +1,41 @@
 import os
-
+import json
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+CONFIG_PATH = os.path.join(BASE_DIR, "config.json")
 
+# Carrega as configurações
+with open(CONFIG_PATH, encoding="utf-8") as f:
+    config = json.load(f)
 
-DOWNLOAD_PATH = os.path.join(BASE_DIR, "..", "planilhas")
-FILE_NAME = "Liberação de Motoristas.xlsx"
+# Caminhos das planilhas
+DOWNLOAD_PATH = os.path.join(ROOT_DIR, config["arquivos"]["download_path"])
+FILE_NAME = config["arquivos"]["file_name"]
 DOWNLOADED_FILE = os.path.join(DOWNLOAD_PATH, FILE_NAME)
-FILE_AUXILIAR = os.path.join(DOWNLOAD_PATH, "Liberação de Motoristas - Auxiliar.xlsx")
-CAMINHO_BASE = os.path.join(DOWNLOAD_PATH, "Cadastro dos Motoristas1.xlsx")
+FILE_AUXILIAR = r'C:\Users\dwbe01\Downloads\ProjetoMotoristas_GUI\ProjetoMotoristas\planilhas\Liberação de Motoristas - Auxiliar.xlsx'
+CAMINHO_BASE = os.path.join(DOWNLOAD_PATH, config["arquivos"]["caminho_base"])
 
 # URLs e destinatários
-EXCEL_ONLINE_URL = (
-    "https://dpdhl-my.sharepoint.com/:x:/r/personal/arthur_mendessacramento_dhl_com/_layouts/15/Doc.aspx?"
-    "sourcedoc=%7B70A1618C-C082-4E6D-8DF0-AEA614CFB622%7D&file=Libera%C3%A7%C3%A3o%20de%20Motoristas.xlsx&"
-    "action=edit&mobileredirect=true&wdMsFormsCorrelationId=b55083de-31fd-4c5b-a18a-83bcc477edd4&"
-    "wdtf=%20Microsoft.Office.Excel.FMsFormsMetadataInWorkbookMetadata%3Atrue"
-)
+EXCEL_ONLINE_URL = config["urls"]["excel_online"]
+DESTINATARIOS = config["emails"]["destinatarios"]
 
-DESTINATARIOS = [
-    "oarthursacra@gmail.com",
-    "sacrarthur06@gmail.com",
-]
+# Nível de log
+NIVEL_LOG = config["logging"]["nivel"]
 
-NIVEL_LOG = "INFO"
-
-# Driver e navegador
-EDGE_DRIVER_PATH = os.path.join(BASE_DIR, "..", "drivers", "msedgedriver.exe")
-
+# Driver e opções
+EDGE_DRIVER_PATH = os.path.join(ROOT_DIR, config["driver"]["path"])
 EDGE_OPTIONS = {
-    "headless": True,
-    "disable_gpu": True,
-    "disable_extensions": True,
-    "disable_popup_blocking": True,
-    "no_sandbox": True,
-    "disable_dev_shm_usage": True,
+    **config["driver"]["options"],
     "prefs": {
         "download.default_directory": DOWNLOAD_PATH,
         "download.prompt_for_download": False,
-        "download.directory_upgrade": True,
+        "download.directory_upgrade": True
     },
 }
 
 # Imagem usada no corpo do e-mail
-IMAGEM_EMAIL = os.path.join(BASE_DIR, "..", "assets", "imagem-dhl.png")
+IMAGEM_EMAIL = os.path.join(ROOT_DIR, config["email_assets"]["imagem"])
 
-# WebDriver wait
+# Timeout padrão do WebDriver
 WEBDRIVER_TIMEOUT = 60
