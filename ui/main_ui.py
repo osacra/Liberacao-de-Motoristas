@@ -282,56 +282,39 @@ class TelaInicial(QMainWindow):
         layout.addWidget(self.txt_file_auxiliar)
         layout.addWidget(btn_salvar)
 
+
     def _salvar_configuracoes(self):
-        import config.settings as settings
         import os
+        import json
         from PySide6.QtWidgets import QMessageBox
+        from config.settings import CONFIG_PATH  # já definido no settings.py
 
-
+        # Lê os novos valores digitados
         novos_emails = [e.strip() for e in self.txt_emails.text().split(",") if e.strip()]
-
         file_auxiliar = self.txt_file_auxiliar.text().strip()
 
-
-        if not novos_emails  or not file_auxiliar:
+        if not novos_emails or not file_auxiliar:
             QMessageBox.warning(self, "Aviso", "Preencha todos os campos antes de salvar.")
             return
 
-
-        settings.DESTINATARIOS = novos_emails
-        settings.FILE_AUXILIAR = file_auxiliar
-
-        arquivo_settings = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "settings.py")
-
         try:
-            with open(arquivo_settings, "r", encoding="utf-8") as f:
-                linhas = f.readlines()
+            # Lê o arquivo JSON atual
+            with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+                config_data = json.load(f)
 
-            with open(arquivo_settings, "w", encoding="utf-8") as f:
-                i = 0
-                while i < len(linhas):
-                    linha = linhas[i]
-                    if linha.strip().startswith("DESTINATARIOS"):
-                        # Ignora todas as linhas até encontrar o fechamento da lista
-                        while i < len(linhas) and "]" not in linhas[i]:
-                            i += 1
-                        i += 1
+            # Atualiza os campos
+            config_data["emails"]["destinatarios"] = novos_emails
+            config_data["arquivos"]["file_auxiliar"] = file_auxiliar
 
-                        f.write("DESTINATARIOS = [\n")
-                        for email in novos_emails:
-                            f.write(f"    '{email}',\n")
-                        f.write("]\n")
-                    elif linha.strip().startswith("FILE_AUXILIAR"):
-                        f.write(f"FILE_AUXILIAR = r'{file_auxiliar}'\n")
-                        i += 1
-                    else:
-                        f.write(linha)
-                        i += 1
+            # Salva novamente o JSON
+            with open(CONFIG_PATH, "w", encoding="utf-8") as f:
+                json.dump(config_data, f, indent=4, ensure_ascii=False)
 
             QMessageBox.information(self, "Sucesso", "Configurações salvas com sucesso!")
 
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Não foi possível salvar as configurações:\n{e}")
+
 
     def _selecionar_arquivo(self, line_edit):
         caminho, _ = QFileDialog.getOpenFileName(self, "Selecionar planilha", "", "Planilhas (*.xlsx *.xls)")
