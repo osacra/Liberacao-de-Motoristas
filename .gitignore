@@ -26,7 +26,13 @@ Thumbs.db
 MANUAL_INSTALACAO.md
 README.md
 
+Sistema de Motoristas.lnk
+assets/ap.ico
+main_ui.spec
+
+
 planilhas/
-driver/
+drivers/
 logs/
 Instruções/
+dist/
