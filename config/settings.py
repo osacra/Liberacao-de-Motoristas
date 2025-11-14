@@ -16,6 +16,7 @@ DOWNLOADED_FILE = os.path.join(DOWNLOAD_PATH, FILE_NAME)
 FILE_AUXILIAR = r'C:\Users\dwbe01\Downloads\ProjetoMotoristas_GUI\ProjetoMotoristas\planilhas\Liberação de Motoristas - Auxiliar.xlsx'
 CAMINHO_BASE = os.path.join(DOWNLOAD_PATH, config["arquivos"]["caminho_base"])
 
+
 # URLs e destinatários
 EXCEL_ONLINE_URL = config["urls"]["excel_online"]
 DESTINATARIOS = config["emails"]["destinatarios"]

@@ -237,8 +237,7 @@ class TelaInicial(QMainWindow):
     def _criar_aba_configuracoes(self, parent_widget):
         layout = QVBoxLayout(parent_widget)
         layout.setContentsMargins(10, 10, 10, 10)
-        layout.setSpacing(10)  # espaço mínimo entre widgets
-        layout.setSizeConstraint(QVBoxLayout.SetDefaultConstraint)  # não força esticar verticalmente
+        layout.setSpacing(10)
 
         import config.settings as settings
 
@@ -246,16 +245,16 @@ class TelaInicial(QMainWindow):
         lbl_emails = QLabel("Emails destinatários (separados por vírgula):")
         self.txt_emails = QLineEdit()
         self.txt_emails.setText(", ".join(settings.DESTINATARIOS))
-        self.txt_emails.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-
-
 
         # --- Caminho da planilha auxiliar ---
         lbl_file_auxiliar = QLabel("Caminho da planilha auxiliar:")
         self.txt_file_auxiliar = QLineEdit()
         self.txt_file_auxiliar.setText(settings.FILE_AUXILIAR)
-        self.txt_file_auxiliar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
+        # --- Link da planilha principal ---
+        lbl_link_planilha = QLabel("Link da planilha principal (Forms/Excel):")
+        self.txt_link_planilha = QLineEdit()
+        self.txt_link_planilha.setText(settings.EXCEL_ONLINE_URL)
 
         # --- Botão Salvar ---
         btn_salvar = QPushButton("Salvar")
@@ -271,42 +270,40 @@ class TelaInicial(QMainWindow):
                 background-color: #45A049;
             }
         """)
-        btn_salvar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         btn_salvar.clicked.connect(self._salvar_configuracoes)
 
-        # --- Adicionando widgets ao layout ---
+        # --- Adicionando ao layout ---
         layout.addWidget(lbl_emails)
         layout.addWidget(self.txt_emails)
 
         layout.addWidget(lbl_file_auxiliar)
         layout.addWidget(self.txt_file_auxiliar)
+
+        layout.addWidget(lbl_link_planilha)
+        layout.addWidget(self.txt_link_planilha)
+
         layout.addWidget(btn_salvar)
 
-
     def _salvar_configuracoes(self):
-        import os
         import json
-        from PySide6.QtWidgets import QMessageBox
-        from config.settings import CONFIG_PATH  # já definido no settings.py
+        from config.settings import CONFIG_PATH
 
-        # Lê os novos valores digitados
         novos_emails = [e.strip() for e in self.txt_emails.text().split(",") if e.strip()]
         file_auxiliar = self.txt_file_auxiliar.text().strip()
+        link_planilha = self.txt_link_planilha.text().strip()  # <--- NOVO
 
-        if not novos_emails or not file_auxiliar:
+        if not novos_emails or not file_auxiliar or not link_planilha:
             QMessageBox.warning(self, "Aviso", "Preencha todos os campos antes de salvar.")
             return
 
         try:
-            # Lê o arquivo JSON atual
             with open(CONFIG_PATH, "r", encoding="utf-8") as f:
                 config_data = json.load(f)
 
-            # Atualiza os campos
             config_data["emails"]["destinatarios"] = novos_emails
             config_data["arquivos"]["file_auxiliar"] = file_auxiliar
+            config_data["urls"]["excel_online"] = link_planilha
 
-            # Salva novamente o JSON
             with open(CONFIG_PATH, "w", encoding="utf-8") as f:
                 json.dump(config_data, f, indent=4, ensure_ascii=False)
 
@@ -314,7 +311,6 @@ class TelaInicial(QMainWindow):
 
         except Exception as e:
             QMessageBox.critical(self, "Erro", f"Não foi possível salvar as configurações:\n{e}")
-
 
     def _selecionar_arquivo(self, line_edit):
         caminho, _ = QFileDialog.getOpenFileName(self, "Selecionar planilha", "", "Planilhas (*.xlsx *.xls)")
