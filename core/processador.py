@@ -4,7 +4,7 @@ from datetime import datetime
 import pythoncom
 from config.settings import DOWNLOADED_FILE, FILE_AUXILIAR, DESTINATARIOS, CAMINHO_BASE
 from core.utils import mexer_mouse, esperar_arquivo_liberar, obter_saudacao
-from core.email_handler import enviar_email, abrir_outlook_minimizado
+from core.email_handler import enviar_email, abrir_outlook_minimizado, notificar_cadastro
 from core.excel_handler import atualizar_planilha_excel, fechar_processos_excel_outlook, padronizar_dados
 from core.excel_handler import atualizar_base_motoristas, checar_cpf
 
@@ -106,7 +106,8 @@ def processar_envios():
 
                 df_aux.to_excel(FILE_AUXILIAR, index=False)
                 logging.info("Cadastros processados e salvos na planilha auxiliar.")
-                return  # encerra aqui, não envia e-mail
+                notificar_cadastro(novos_cadastros)
+                return
 
         # CASO 2 — Liberação de Motorista
         novos_registros = df_oficial[

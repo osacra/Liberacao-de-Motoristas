@@ -110,3 +110,39 @@ def enviar_email(destinatarios, assunto, corpo):
         logging.error(f"❌ Erro ao enviar e-mail: {e}")
         alerta_erro(f"Falha ao enviar e-mail: {e}")
         return False
+
+def notificar_cadastro(novos_cadastros):
+    """
+    Envia notificação interna SOMENTE dos motoristas cadastrados nesta execução.
+    """
+    try:
+        if novos_cadastros.empty:
+            logging.info("Nenhum novo motorista para notificação interna.")
+            return
+
+        logging.info("Enviando notificação de novos motoristas cadastrados...")
+
+        import win32com.client as win32
+        outlook = win32.Dispatch("Outlook.Application")
+
+        assunto = "Novo motorista cadastrado no sistema"
+        corpo = "<h3>Novo(s) motorista(s) cadastrado(s):</h3><ul>"
+
+        for _, m in novos_cadastros.iterrows():
+            nome = str(m.get("Nome do Novo Motorista", "")).strip().title()
+            cpf = str(m.get("CPF do Novo Motorista", "")).strip()
+
+            corpo += f"<li><b>{nome}</b> — CPF: {cpf}</li>"
+
+        corpo += "</ul><br><p>Verifique na base de motoristas.</p>"
+
+        mail = outlook.CreateItem(0)
+        mail.To = "oarthursacra@gmail.com"
+        mail.Subject = assunto
+        mail.HTMLBody = corpo
+        mail.Send()
+
+        logging.info("E-mail de notificação interna enviado com sucesso.")
+
+    except Exception as e:
+        logging.error(f"Erro ao enviar notificação de novos cadastros: {e}")
