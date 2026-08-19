@@ -30,6 +30,10 @@ main.py
 
 The separation between the UI, processing rules and integration handlers makes it possible to change the operational workflow without coupling every component to the desktop interface.
 
+![Driver-release automation workflow](docs/diagrams/architecture.png)
+
+The diagram is a faithful workflow view of the current implementation. It is provided as an architecture demo because the application depends on Windows-only integrations such as Outlook, Excel and Edge WebDriver.
+
 ## Technology stack
 
 | Area | Technologies |
