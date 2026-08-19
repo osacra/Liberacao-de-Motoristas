@@ -1,192 +1,97 @@
 # Sistema de Liberação de Motoristas
 
-Sistema desktop desenvolvido em Python para automação do processo de liberação de motoristas, monitoramento de planilhas e envio automático de e-mails.
+Desktop automation built with Python to monitor operational spreadsheets, identify pending driver releases and notify the responsible team. The project was created from a real logistics workflow and focuses on reducing repetitive manual work, improving validation and preserving an operational log.
 
-O projeto foi criado para centralizar e agilizar o fluxo operacional de liberações, reduzindo tarefas manuais e aumentando a confiabilidade do processo.
+## Impact
 
----
+The system automates a driver-release process in a 24/7 logistics operation. The solution centralizes spreadsheet monitoring, compares new and processed records, identifies pending releases and sends notifications. In the professional context where it was developed, the automation reduced approximately **56 hours of manual effort per month**.
 
-#  Funcionalidades
+## Main capabilities
 
-* Monitoramento automático de planilhas Excel
-* Comparação de registros novos e já processados
-* Envio automático de e-mails
-* Interface gráfica moderna com PySide6
-* Integração com Selenium + Edge
-* Controle de logs e alertas
-* Atualização contínua em loop
-* Sistema preparado para execução local
-* Organização modular do projeto
+- Continuous monitoring of Excel workbooks.
+- Comparison between new and already processed records.
+- Validation and processing of pending driver releases.
+- Automatic e-mail notifications.
+- Selenium integration with Microsoft Edge and Excel Online.
+- Desktop interface with start, pause, status and history controls.
+- Structured logging, alerts and modular business rules.
+- Local configuration for Windows-based operational environments.
 
----
+## Architecture
 
-#  Tecnologias Utilizadas
-
-## Backend
-
-* Python 3
-* Pandas
-* OpenPyXL
-* Selenium
-* Requests
-
-## Interface
-
-* PySide6
-* PyStray
-* Pillow
-
-## Integrações
-
-* Outlook (pywin32)
-* Microsoft Excel
-* Microsoft Forms
-* Microsoft Edge WebDriver
-
----
-
-#  Estrutura do Projeto
-
-```bash
-Liberacao-de-Motoristas/
-│
-├── assets/                  # Logos e imagens do sistema
-├── config/                  # Arquivos de configuração
-│   ├── config.json
-│   └── settings.py
-│
-├── core/                    # Regras de negócio
-│   ├── alerts.py
-│   ├── driver_setup.py
-│   ├── email_handler.py
-│   ├── excel_handler.py
-│   └── monitor.py
-│   └── processador.py
-│   └── selenium_excel.py
-│   └── utils.py
-│
-├── ui/                      # Interface gráfica
-│   └── main_ui.py
-│
-├── main.py                  # Arquivo principal
-├── requirements.txt
-└── .gitignore
+```text
+main.py
+  |
+  +-- ui/       Desktop interface with PySide6
+  +-- core/     Monitoring, processing, Excel, e-mail and alert rules
+  +-- config/   Local configuration and environment-specific settings
+  +-- assets/   Application and e-mail assets
 ```
 
----
+The separation between the UI, processing rules and integration handlers makes it possible to change the operational workflow without coupling every component to the desktop interface.
 
-# Como Executar o Projeto
+## Technology stack
 
-## 1. Clonar o repositório
+| Area | Technologies |
+|---|---|
+| Language | Python 3 |
+| Data and spreadsheets | Pandas, OpenPyXL |
+| Automation and integration | Selenium, Requests, Microsoft Edge WebDriver |
+| Desktop UI | PySide6, PyStray, Pillow |
+| Notifications | Outlook integration through `pywin32` |
+| Quality and operations | Modular structure, configuration file and logging |
 
-```bash
-git clone <url-do-repositorio>
+## Run locally on Windows
+
+This project integrates with Microsoft Excel, Outlook and Edge WebDriver, so it is intended for a Windows environment with those dependencies available.
+
+### Requirements
+
+- Python 3.10 or newer.
+- Microsoft Edge and a compatible Edge WebDriver.
+- Microsoft Excel and Outlook when using the corresponding integrations.
+- Access to the operational workbook and its permitted notification workflow.
+
+### Install
+
+```powershell
+git clone https://github.com/osacra/Liberacao-de-Motoristas.git
 cd Liberacao-de-Motoristas
-```
-
----
-
-## 2. Criar ambiente virtual
-
-### Windows
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
----
-
-## 3. Instalar dependências
-
-```bash
+python -m venv .venv
+.\\.venv\\Scripts\\Activate.ps1
 pip install -r requirements.txt
 ```
 
----
+### Configure
 
-## 4. Configurar o projeto
+Copy the example configuration and replace only the local values required by your environment:
 
-Edite o arquivo:
-
-```bash
-config/config.json
+```powershell
+Copy-Item config\\config.example.json config\\config.json
 ```
 
-Defina:
+Configure workbook paths, the permitted Excel Online URL, notification recipients, Edge WebDriver path and local asset paths. The file `config/config.json` is ignored by Git and must never contain credentials or private production links in a public commit.
 
-* Caminhos das planilhas
-* URL do Excel Online
-* Destinatários de e-mail
-* Caminho do EdgeDriver
-* Configurações de logging
+### Start
 
----
-
-## 5. Executar
-
-```bash
+```powershell
 python main.py
 ```
 
----
+## Important security and portability notes
 
-#  Funcionamento do Sistema
+The automation depends on local workbooks, Microsoft accounts and Windows integrations. Do not commit private SharePoint links, personal e-mail addresses, access tokens, exported spreadsheets or machine-specific paths. Use the example configuration as a template and keep operational data outside the repository.
 
-O sistema realiza:
+The project is an internal-process automation and is not designed to run unchanged in a public cloud environment. A future evolution could replace local Outlook/Edge dependencies with service APIs, environment variables and a controlled job runner.
 
-1. Monitoramento da planilha principal
-2. Verificação de novos registros
-3. Comparação com planilha auxiliar
-4. Identificação de liberações pendentes
-5. Envio automático de e-mails
-6. Registro das operações em log
+## Future improvements
 
----
+1. Add automated tests around spreadsheet parsing and business rules.
+2. Replace hardcoded local paths with validated configuration values.
+3. Add structured error reporting and retry policies for external integrations.
+4. Provide a sanitized demo dataset for reproducible portfolio demonstrations.
+5. Package the desktop application with a documented release process.
 
-#  Interface
+## Author
 
-A aplicação possui interface gráfica desenvolvida com PySide6 contendo:
-
-* Início e pausa do monitoramento
-* Status do sistema
-* Histórico de liberações
-* Busca de registros
-* Controle operacional
-
----
-
-#  Dependências Principais
-
-```txt
-pandas
-openpyxl
-PySide6
-selenium
-requests
-pywin32
-pystray
-pillow
-```
-
----
-
-#  Observações
-
-* O projeto utiliza Microsoft Outlook instalado localmente para envio de e-mails.
-* O EdgeDriver deve ser compatível com a versão do Microsoft Edge instalada.
-* O sistema foi desenvolvido para ambiente Windows.
-
----
-
-#  Objetivo do Projeto
-
-O objetivo do sistema é automatizar e centralizar o processo operacional de liberação de motoristas, reduzindo tempo de execução, erros manuais e dependência de controles operacionais descentralizados.
-
-Além da automação operacional, o projeto também serve como base para futuras evoluções envolvendo centralização de dados, dashboards e escalabilidade corporativa.
-
----
-
-# 👨‍💻 Autor
-
-Desenvolvido por Arthur Mendes Sacramento.
+Developed by [Arthur Sacramento](https://github.com/osacra).

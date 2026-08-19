@@ -36,3 +36,7 @@ drivers/
 logs/
 Instruções/
 dist/
+
+# Configuração local e dados privados
+config/config.json
+config/*.local.json

@@ -137,7 +137,7 @@ def notificar_cadastro(novos_cadastros):
         corpo += "</ul><br><p>Verifique na base de motoristas.</p>"
 
         mail = outlook.CreateItem(0)
-        mail.To = "oarthursacra@gmail.com"
+        mail.To = "; ".join(DESTINATARIOS)
         mail.Subject = assunto
         mail.HTMLBody = corpo
         mail.Send()

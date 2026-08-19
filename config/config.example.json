@@ -1,0 +1,33 @@
+{
+  "arquivos": {
+    "download_path": "planilhas",
+    "file_name": "Liberação de Motoristas.xlsx",
+    "file_auxiliar": "Liberação de Motoristas - Auxiliar.xlsx",
+    "caminho_base": "Cadastro dos Motoristas1.xlsx"
+  },
+  "urls": {
+    "excel_online": "https://example.sharepoint.com/"
+  },
+  "emails": {
+    "destinatarios": [
+      "destinatario@example.com"
+    ]
+  },
+  "driver": {
+    "path": "drivers/msedgedriver.exe",
+    "options": {
+      "headless": true,
+      "disable_gpu": true,
+      "disable_extensions": true,
+      "disable_popup_blocking": true,
+      "no_sandbox": true,
+      "disable_dev_shm_usage": true
+    }
+  },
+  "logging": {
+    "nivel": "INFO"
+  },
+  "email_assets": {
+    "imagem": "assets/imagem-dhl.png"
+  }
+}

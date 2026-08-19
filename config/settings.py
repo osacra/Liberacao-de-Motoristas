@@ -13,7 +13,7 @@ with open(CONFIG_PATH, encoding="utf-8") as f:
 DOWNLOAD_PATH = os.path.join(ROOT_DIR, config["arquivos"]["download_path"])
 FILE_NAME = config["arquivos"]["file_name"]
 DOWNLOADED_FILE = os.path.join(DOWNLOAD_PATH, FILE_NAME)
-FILE_AUXILIAR = r'C:\Users\dwbe01\Downloads\ProjetoMotoristas_GUI\ProjetoMotoristas\planilhas\Liberação de Motoristas - Auxiliar.xlsx'
+FILE_AUXILIAR = os.path.join(DOWNLOAD_PATH, config["arquivos"]["file_auxiliar"])
 CAMINHO_BASE = os.path.join(DOWNLOAD_PATH, config["arquivos"]["caminho_base"])
 
 
